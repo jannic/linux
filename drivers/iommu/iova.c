@@ -904,19 +904,10 @@ static void free_iova_rcaches(struct iova_domain *iovad)
  */
 void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad)
 {
-	struct iova_cpu_rcache *cpu_rcache;
-	struct iova_rcache *rcache;
 	unsigned long flags;
-	int i;
 
-	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
-		rcache = &iovad->rcaches[i];
-		cpu_rcache = per_cpu_ptr(rcache->cpu_rcaches, cpu);
-		spin_lock_irqsave(&cpu_rcache->lock, flags);
-		iova_magazine_free_pfns(cpu_rcache->loaded, iovad);
-		iova_magazine_free_pfns(cpu_rcache->prev, iovad);
-		spin_unlock_irqrestore(&cpu_rcache->lock, flags);
-	}
+	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
+	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
 }
 
 MODULE_AUTHOR("Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>");
