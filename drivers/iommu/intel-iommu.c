@@ -4605,7 +4605,6 @@ static void free_all_cpu_cached_iovas(unsigned int cpu)
 
 			if (!domain)
 				continue;
-			free_cpu_cached_iovas(cpu, &domain->iovad);
 		}
 	}
 }
